@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelOni.ai - Prompt Library</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --dark-navy: #1a3a52; --navy: #2a4a62; --cream: #f5e6d3;
+            --teal: #7dd3c0; --coral: #ffa07a; --text-dark: #1a3a52;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.6; }
+        .header { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy) 100%); padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; }
+        .logo-container { flex-shrink: 0; }
+        .logo { width: 120px; height: 120px; border-radius: 50%; background: var(--cream); padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .header-text h1 { color: var(--cream); font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .header-text p { color: var(--teal); font-size: 1.1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .search-bar { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; border: 2px solid var(--teal); }
+        .search-bar input { width: 100%; padding: 1rem; font-size: 1rem; border: 2px solid var(--navy); border-radius: 8px; outline: none; transition: all 0.3s; }
+        .search-bar input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(125, 211, 192, 0.2); }
+        .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .category-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-left: 4px solid var(--teal); transition: all 0.3s; }
+        .category-card h3 { color: var(--dark-navy); font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .category-card .count { color: var(--teal); font-weight: bold; font-size: 1.1rem; }
+        .category-subfolders { margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid #e0e0e0; font-size: 0.85rem; color: #666; }
+        .subfolder-item { display: inline-block; margin-right: 1rem; margin-top: 0.3rem; }
+        .prompts-section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .prompt-item { border-bottom: 1px solid #e0e0e0; padding: 1.5rem 0; transition: all 0.2s; cursor: pointer; }
+        .prompt-item:last-child { border-bottom: none; }
+        .prompt-item:hover { background: rgba(125, 211, 192, 0.05); padding-left: 1rem; margin-left: -1rem; border-radius: 8px; }
+        .prompt-title { color: var(--dark-navy); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .prompt-meta { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.9rem; color: #666; }
+        .tag { background: var(--teal); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; }
+        .subfolder-badge { display: inline-block; background: var(--coral); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; margin-left: 0.5rem; }
+        .stats { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .stat-card { flex: 1; min-width: 200px; background: linear-gradient(135deg, var(--teal) 0%, var(--coral) 100%); color: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .stat-card h4 { font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem; }
+        .stat-card .number { font-size: 2.5rem; font-weight: bold; }
+        .footer { text-align: center; padding: 2rem; color: var(--navy); margin-top: 4rem; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/logo.png" alt="PixelOni.ai Logo" class="logo">
+            </div>
+            <div class="header-text">
+                <h1>PixelOni.ai Prompt Library</h1>
+                <p>Your organized collection of AI prompts and workflows</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card"><h4>Total Prompts</h4><div class="number" id="totalPrompts">0</div></div>
+            <div class="stat-card"><h4>Categories</h4><div class="number" id="totalCategories">0</div></div>
+            <div class="stat-card"><h4>Last Updated</h4><div class="number" style="font-size: 1.2rem;" id="lastUpdated">Today</div></div>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search prompts by title, tags, or content..." />
+        </div>
+        <div class="categories" id="categoriesGrid"></div>
+        <div class="prompts-section">
+            <h2 style="color: var(--dark-navy); margin-bottom: 1.5rem;">
+                All Prompts <button onclick="resetFilter()" style="margin-left: 1rem; padding: 0.5rem 1rem; background: var(--teal); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">Show All</button>
+            </h2>
+            <div id="promptsList"><div class="prompt-item"><div class="prompt-title">Loading...</div></div></div>
+        </div>
+    </div>
+    <div class="footer"><p>PixelOni.ai Prompt Library | satanzhand since 1980s</p></div>
+    <script>
+        let allPrompts = [];
+        const categoryIcons = { coding: '🔧', writing: '✍️', analysis: '📊', automation: '⚙️', clients: '👥' };
+        const categoryDescriptions = { 
+            coding: 'Development and programming prompts', writing: 'Content creation and documentation',
+            analysis: 'Data processing and insights', automation: 'Scripts and workflow automation',
+            clients: 'Client-specific prompts and workflows'
+        };
+        
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const categories = await response.json();
+                const grid = document.getElementById('categoriesGrid');
+                grid.innerHTML = Object.entries(categories).map(([name, data]) => {
+                    const icon = categoryIcons[name] || '📁';
+                    const desc = categoryDescriptions[name] || 'Prompts and workflows';
+                    let subfoldersHTML = '';
+                    if (Object.keys(data.subfolders).length > 0) {
+                        subfoldersHTML = '<div class="category-subfolders">' +
+                            Object.entries(data.subfolders).map(([sub, count]) => 
+                                `<span class="subfolder-item" onclick="filterBySubfolder('${name}', '${sub}'); event.stopPropagation();">📂 ${sub}: ${count}</span>`
+                            ).join('') + '</div>';
+                    }
+                    return `<div class="category-card" onclick="filterByCategory('${name}')">
+                        <h3>${icon} ${name.charAt(0).toUpperCase() + name.slice(1)}</h3>
+                        <p>${desc}</p><div class="count">${data.total} prompts</div>${subfoldersHTML}</div>`;
+                }).join('');
+                document.getElementById('totalCategories').textContent = Object.keys(categories).length;
+            } catch (error) { console.error('Error loading categories:', error); }
+        }
+        
+        async function loadPrompts() {
+            try {
+                const response = await fetch('/api/prompts');
+                allPrompts = await response.json();
+                document.getElementById('totalPrompts').textContent = allPrompts.length;
+                renderPrompts(allPrompts);
+            } catch (error) {
+                console.error('Error loading prompts:', error);
+                document.getElementById('promptsList').innerHTML = 
+                    '<div class="prompt-item"><div class="prompt-title">Error loading prompts. Make sure Flask server is running.</div></div>';
+            }
+        }
+        
+        function renderPrompts(prompts) {
+            const list = document.getElementById('promptsList');
+            if (prompts.length === 0) {
+                list.innerHTML = '<div class="prompt-item"><div class="prompt-title">No prompts found</div></div>';
+                return;
+            }
+            list.innerHTML = prompts.map(p => {
+                const subfolderBadge = p.subfolder ? `<span class="subfolder-badge">${p.subfolder}</span>` : '';
+                return `<div class="prompt-item" onclick="openPrompt('${p.path}')">
+                    <div class="prompt-title">${p.title}${subfolderBadge}</div>
+                    <div class="prompt-meta"><span>📁 ${p.category}</span><span>📅 ${p.date}</span>
+                    ${p.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div></div>`;
+            }).join('');
+        }
+        
+        function openPrompt(path) { window.open(path, '_blank'); }
+        
+        function filterByCategory(category) {
+            const filtered = allPrompts.filter(p => p.category === category);
+            renderPrompts(filtered);
+            document.querySelector('.prompts-section h2').textContent = 
+                `${category.charAt(0).toUpperCase() + category.slice(1)} Prompts (${filtered.length})`;
+        }
+        
+        function filterBySubfolder(category, subfolder) {
+            const filtered = allPrompts.filter(p => p.category === category && p.subfolder === subfolder);
+            renderPrompts(filtered);
+            document.querySelector('.prompts-section h2').textContent = 
+                `${category.charAt(0).toUpperCase() + category.slice(1)} > ${subfolder} (${filtered.length})`;
+        }
+        
+        function resetFilter() {
+            renderPrompts(allPrompts);
+            document.querySelector('.prompts-section h2').textContent = 'All Prompts';
+        }
+        
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const term = e.target.value.toLowerCase().trim();
+            if (term === '') { renderPrompts(allPrompts); return; }
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`);
+                    const results = await response.json();
+                    renderPrompts(results);
+                } catch (error) { console.error('Search error:', error); }
+            }, 300);
+        });
+        
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+        window.addEventListener('load', () => { loadCategories(); loadPrompts(); });
+    </script>
+</body>
+</html>
