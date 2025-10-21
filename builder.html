@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Builder - PixelOni.ai</title>
+    <style>
+        :root {
+            --navy-dark: #1a3a52;
+            --navy-light: #2a4a62;
+            --teal: #7dd3c0;
+            --coral: #ffa07a;
+            --cream: #f5e6d3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-light) 100%);
+            color: var(--cream);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .header-text h1 {
+            color: var(--teal);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            color: var(--cream);
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .back-link {
+            margin-left: auto;
+            text-decoration: none;
+            color: var(--teal);
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid var(--teal);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .back-link:hover {
+            background: var(--teal);
+            color: var(--navy-dark);
+        }
+        
+        .builder-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(125, 211, 192, 0.3);
+        }
+        
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: var(--cream);
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            opacity: 0.6;
+        }
+        
+        .tab-button:hover {
+            opacity: 1;
+        }
+        
+        .tab-button.active {
+            color: var(--teal);
+            border-bottom-color: var(--teal);
+            opacity: 1;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-section label {
+            display: block;
+            color: var(--teal);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-section input,
+        .form-section select,
+        .form-section textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(125, 211, 192, 0.3);
+            color: var(--cream);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-section textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-section textarea.short {
+            min-height: 80px;
+        }
+        
+        .form-section input:focus,
+        .form-section select:focus,
+        .form-section textarea:focus {
+            outline: none;
+            border-color: var(--teal);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .form-section select option {
+            background: var(--navy-dark);
+            color: var(--cream);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .radio-option input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+        
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .required {
+            color: var(--coral);
+            margin-left: 4px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(125, 211, 192, 0.3);
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--teal);
+            color: var(--navy-dark);
+        }
+        
+        .btn-primary:hover {
+            background: var(--coral);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 160, 122, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--teal);
+            border: 2px solid var(--teal);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--teal);
+            color: var(--navy-dark);
+        }
+        
+        .btn-danger {
+            background: transparent;
+            color: var(--coral);
+            border: 2px solid var(--coral);
+            margin-left: auto;
+        }
+        
+        .btn-danger:hover {
+            background: var(--coral);
+            color: var(--navy-dark);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--navy-dark);
+            border: 2px solid var(--teal);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(125, 211, 192, 0.3);
+        }
+        
+        .modal-header h2 {
+            color: var(--teal);
+        }
+        
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--coral);
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .modal-close:hover {
+            color: var(--cream);
+        }
+        
+        .preview-content {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .error-message {
+            background: rgba(255, 160, 122, 0.2);
+            border: 1px solid var(--coral);
+            color: var(--coral);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+        
+        .success-message {
+            background: rgba(125, 211, 192, 0.2);
+            border: 1px solid var(--teal);
+            color: var(--teal);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .success-message.active {
+            display: block;
+        }
+        
+        .helper-text {
+            font-size: 12px;
+            color: rgba(245, 230, 211, 0.6);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="logo.png" alt="PixelOni.ai Logo" class="logo">
+                </div>
+                <div class="header-text">
+                    <h1>Prompt Builder</h1>
+                    <p>Create structured AI prompts with Anthropic best practices</p>
+                </div>
+                <a href="/" class="back-link">← Back to Library</a>
+            </div>
+        </div>
+        
+        <div class="builder-container">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <div class="tabs">
+                <button class="tab-button active" data-tab="basic">Basic</button>
+                <button class="tab-button" data-tab="research">Research</button>
+                <button class="tab-button" data-tab="code">Code</button>
+                <button class="tab-button" data-tab="analysis">Analysis</button>
+            </div>
+            
+            <form id="promptForm">
+                <div class="form-section">
+                    <label>Title <span class="required">*</span></label>
+                    <input type="text" id="title" name="title" required minlength="3">
+                    <div class="helper-text">Minimum 3 characters</div>
+                </div>
+                
+                <div class="form-section">
+                    <label>Description</label>
+                    <textarea id="description" name="description" class="short"></textarea>
+                    <div class="helper-text">Brief description (optional, defaults to title)</div>
+                </div>
+                
+                <div class="form-section">
+                    <label>Category <span class="required">*</span></label>
+                    <select id="category" name="category" required>
+                        <option value="">Select category...</option>
+                        <option value="coding">Coding</option>
+                        <option value="writing">Writing</option>
+                        <option value="analysis">Analysis</option>
+                        <option value="automation">Automation</option>
+                        <option value="clients">Clients</option>
+                    </select>
+                </div>
+                
+                <div class="form-section">
+                    <label>Subfolder</label>
+                    <input type="text" id="subfolder" name="subfolder">
+                    <div class="helper-text">Optional: organize prompts within categories (e.g., "python", "sales")</div>
+                </div>
+                
+                <div class="form-section">
+                    <label>Tags</label>
+                    <input type="text" id="tags" name="tags">
+                    <div class="helper-text">Comma-separated tags for searchability</div>
+                </div>
+                
+                <div class="form-section">
+                    <label>Citation Format</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="apa" name="citation_format" value="APA" checked>
+                            <label for="apa">APA</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="harvard" name="citation_format" value="Harvard">
+                            <label for="harvard">Harvard</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <label>Source Document Paths</label>
+                    <textarea id="source_paths" name="source_paths" class="short"></textarea>
+                    <div class="helper-text">Absolute paths to source files (one per line). Claude will use Desktop Commander to access these files.</div>
+                </div>
+                
+                <div class="form-section">
+                    <label>Output Path</label>
+                    <input type="text" id="output_path" name="output_path">
+                    <div class="helper-text">Absolute path where Claude should save output files (e.g., C:\Users\aaron\Desktop\output.docx)</div>
+                </div>
+                
+                <!-- Common sections for all tabs -->
+                <div id="basicTab" class="tab-content active">
+                    <div class="form-section">
+                        <label>Role <span class="required">*</span></label>
+                        <textarea id="role" name="role" required minlength="20"></textarea>
+                        <div class="helper-text">Define the AI's expertise and perspective (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Task <span class="required">*</span></label>
+                        <textarea id="task" name="task" required minlength="20"></textarea>
+                        <div class="helper-text">Specific objective or goal (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Context</label>
+                        <textarea id="context" name="context"></textarea>
+                        <div class="helper-text">Background information, constraints, or variables</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Examples</label>
+                        <textarea id="examples" name="examples"></textarea>
+                        <div class="helper-text">Sample inputs/outputs or reference cases</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Output Format</label>
+                        <textarea id="output_format" name="output_format"></textarea>
+                        <div class="helper-text">How results should be structured or presented</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Constraints</label>
+                        <textarea id="constraints" name="constraints"></textarea>
+                        <div class="helper-text">Limitations, requirements, or boundaries</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Thinking</label>
+                        <textarea id="thinking" name="thinking"></textarea>
+                        <div class="helper-text">Reasoning approach or problem-solving methodology</div>
+                    </div>
+                </div>
+                
+                <div id="researchTab" class="tab-content">
+                    <div class="form-section">
+                        <label>Role <span class="required">*</span></label>
+                        <textarea name="role_research" class="shared-field" data-target="role"></textarea>
+                        <div class="helper-text">Define the AI's expertise and perspective (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Task <span class="required">*</span></label>
+                        <textarea name="task_research" class="shared-field" data-target="task"></textarea>
+                        <div class="helper-text">Specific objective or goal (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Context</label>
+                        <textarea name="context_research" class="shared-field" data-target="context"></textarea>
+                        <div class="helper-text">Background information, constraints, or variables</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Sources</label>
+                        <textarea id="sources" name="sources"></textarea>
+                        <div class="helper-text">Required or preferred research sources</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Methodology</label>
+                        <textarea id="methodology" name="methodology"></textarea>
+                        <div class="helper-text">Research approach or data collection methods</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Examples</label>
+                        <textarea name="examples_research" class="shared-field" data-target="examples"></textarea>
+                        <div class="helper-text">Sample inputs/outputs or reference cases</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Literature Review</label>
+                        <textarea id="literature_review" name="literature_review"></textarea>
+                        <div class="helper-text">Existing research context or key findings</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Output Format</label>
+                        <textarea name="output_format_research" class="shared-field" data-target="output_format"></textarea>
+                        <div class="helper-text">How results should be structured or presented</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Constraints</label>
+                        <textarea name="constraints_research" class="shared-field" data-target="constraints"></textarea>
+                        <div class="helper-text">Limitations, requirements, or boundaries</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Quality Criteria</label>
+                        <textarea id="quality_criteria" name="quality_criteria"></textarea>
+                        <div class="helper-text">Standards for evaluating research quality</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Thinking</label>
+                        <textarea name="thinking_research" class="shared-field" data-target="thinking"></textarea>
+                        <div class="helper-text">Reasoning approach or problem-solving methodology</div>
+                    </div>
+                </div>
+                
+                <div id="codeTab" class="tab-content">
+                    <div class="form-section">
+                        <label>Role <span class="required">*</span></label>
+                        <textarea name="role_code" class="shared-field" data-target="role"></textarea>
+                        <div class="helper-text">Define the AI's expertise and perspective (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Language</label>
+                        <textarea id="language" name="language"></textarea>
+                        <div class="helper-text">Programming language(s) and version requirements</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Task <span class="required">*</span></label>
+                        <textarea name="task_code" class="shared-field" data-target="task"></textarea>
+                        <div class="helper-text">Specific objective or goal (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Context</label>
+                        <textarea name="context_code" class="shared-field" data-target="context"></textarea>
+                        <div class="helper-text">Background information, constraints, or variables</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Dependencies</label>
+                        <textarea id="dependencies" name="dependencies"></textarea>
+                        <div class="helper-text">Required libraries, packages, or frameworks</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Examples</label>
+                        <textarea name="examples_code" class="shared-field" data-target="examples"></textarea>
+                        <div class="helper-text">Sample inputs/outputs or reference cases</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Tests</label>
+                        <textarea id="tests" name="tests"></textarea>
+                        <div class="helper-text">Testing requirements or test cases</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Performance Requirements</label>
+                        <textarea id="performance_requirements" name="performance_requirements"></textarea>
+                        <div class="helper-text">Speed, memory, or efficiency constraints</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Output Format</label>
+                        <textarea name="output_format_code" class="shared-field" data-target="output_format"></textarea>
+                        <div class="helper-text">How results should be structured or presented</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Constraints</label>
+                        <textarea name="constraints_code" class="shared-field" data-target="constraints"></textarea>
+                        <div class="helper-text">Limitations, requirements, or boundaries</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Style Guide</label>
+                        <textarea id="style_guide" name="style_guide"></textarea>
+                        <div class="helper-text">Code formatting and naming conventions</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Error Handling</label>
+                        <textarea id="error_handling" name="error_handling"></textarea>
+                        <div class="helper-text">How to handle exceptions and edge cases</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Thinking</label>
+                        <textarea name="thinking_code" class="shared-field" data-target="thinking"></textarea>
+                        <div class="helper-text">Reasoning approach or problem-solving methodology</div>
+                    </div>
+                </div>
+                
+                <div id="analysisTab" class="tab-content">
+                    <div class="form-section">
+                        <label>Role <span class="required">*</span></label>
+                        <textarea name="role_analysis" class="shared-field" data-target="role"></textarea>
+                        <div class="helper-text">Define the AI's expertise and perspective (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Task <span class="required">*</span></label>
+                        <textarea name="task_analysis" class="shared-field" data-target="task"></textarea>
+                        <div class="helper-text">Specific objective or goal (minimum 20 characters)</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Context</label>
+                        <textarea name="context_analysis" class="shared-field" data-target="context"></textarea>
+                        <div class="helper-text">Background information, constraints, or variables</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Data Format</label>
+                        <textarea id="data_format" name="data_format"></textarea>
+                        <div class="helper-text">Expected data structure and format</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Metrics</label>
+                        <textarea id="metrics" name="metrics"></textarea>
+                        <div class="helper-text">Key performance indicators or measurement criteria</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Formulas</label>
+                        <textarea id="formulas" name="formulas"></textarea>
+                        <div class="helper-text">Mathematical formulas with variable explanations</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Visualization Requirements</label>
+                        <textarea id="visualization_requirements" name="visualization_requirements"></textarea>
+                        <div class="helper-text">Charts, graphs, or visual presentation needs</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Examples</label>
+                        <textarea name="examples_analysis" class="shared-field" data-target="examples"></textarea>
+                        <div class="helper-text">Sample inputs/outputs or reference cases</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Comparison Criteria</label>
+                        <textarea id="comparison_criteria" name="comparison_criteria"></textarea>
+                        <div class="helper-text">Benchmarks or comparison standards</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Output Format</label>
+                        <textarea name="output_format_analysis" class="shared-field" data-target="output_format"></textarea>
+                        <div class="helper-text">How results should be structured or presented</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Constraints</label>
+                        <textarea name="constraints_analysis" class="shared-field" data-target="constraints"></textarea>
+                        <div class="helper-text">Limitations, requirements, or boundaries</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Confidence Levels</label>
+                        <textarea id="confidence_levels" name="confidence_levels"></textarea>
+                        <div class="helper-text">Statistical confidence or certainty thresholds</div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label>Thinking</label>
+                        <textarea name="thinking_analysis" class="shared-field" data-target="thinking"></textarea>
+                        <div class="helper-text">Reasoning approach or problem-solving methodology</div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" id="saveBtn">Save Prompt</button>
+                    <button type="button" class="btn btn-secondary" id="previewBtn">Preview</button>
+                    <button type="button" class="btn btn-danger" id="clearBtn">Clear Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Preview Prompt</h2>
+                <button class="modal-close" id="closePreview">&times;</button>
+            </div>
+            <div class="preview-content" id="previewContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        const tabs = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const form = document.getElementById('promptForm');
+        const previewBtn = document.getElementById('previewBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const previewModal = document.getElementById('previewModal');
+        const closePreview = document.getElementById('closePreview');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        
+        let currentTab = 'basic';
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabName}Tab`) {
+                        content.classList.add('active');
+                        syncSharedFields(tabName);
+                    }
+                });
+                
+                currentTab = tabName;
+            });
+        });
+        
+        function syncSharedFields(toTab) {
+            const sharedFields = ['role', 'task', 'context', 'examples', 'output_format', 'constraints', 'thinking'];
+            
+            sharedFields.forEach(fieldName => {
+                const mainField = document.getElementById(fieldName);
+                const targetField = document.querySelector(`textarea[data-target="${fieldName}"]`);
+                
+                if (targetField && targetField.closest('.tab-content').classList.contains('active')) {
+                    targetField.value = mainField.value;
+                }
+            });
+        }
+        
+        document.querySelectorAll('.shared-field').forEach(field => {
+            field.addEventListener('input', (e) => {
+                const targetFieldName = e.target.dataset.target;
+                const mainField = document.getElementById(targetFieldName);
+                if (mainField) {
+                    mainField.value = e.target.value;
+                }
+            });
+        });
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('active');
+            successMessage.classList.remove('active');
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('active');
+            errorMessage.classList.remove('active');
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function hideMessages() {
+            errorMessage.classList.remove('active');
+            successMessage.classList.remove('active');
+        }
+        
+        function validateForm() {
+            hideMessages();
+            
+            const title = document.getElementById('title').value.trim();
+            if (!title || title.length < 3) {
+                showError('Title required (minimum 3 characters)');
+                return false;
+            }
+            
+            const role = document.getElementById('role').value.trim();
+            if (!role || role.length < 20) {
+                showError('Role required (minimum 20 characters)');
+                return false;
+            }
+            
+            const task = document.getElementById('task').value.trim();
+            if (!task || task.length < 20) {
+                showError('Task required (minimum 20 characters)');
+                return false;
+            }
+            
+            const category = document.getElementById('category').value;
+            if (!category) {
+                showError('Category selection required');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function getFormData() {
+            const data = {
+                tab_type: currentTab,
+                title: document.getElementById('title').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                category: document.getElementById('category').value,
+                subfolder: document.getElementById('subfolder').value.trim(),
+                tags: document.getElementById('tags').value.trim(),
+                citation_format: document.querySelector('input[name="citation_format"]:checked').value,
+                source_paths: document.getElementById('source_paths').value.trim(),
+                output_path: document.getElementById('output_path').value.trim(),
+                role: document.getElementById('role').value.trim(),
+                task: document.getElementById('task').value.trim(),
+                context: document.getElementById('context').value.trim(),
+                examples: document.getElementById('examples').value.trim(),
+                output_format: document.getElementById('output_format').value.trim(),
+                constraints: document.getElementById('constraints').value.trim(),
+                thinking: document.getElementById('thinking').value.trim()
+            };
+            
+            if (currentTab === 'research') {
+                data.sources = document.getElementById('sources').value.trim();
+                data.methodology = document.getElementById('methodology').value.trim();
+                data.literature_review = document.getElementById('literature_review').value.trim();
+                data.quality_criteria = document.getElementById('quality_criteria').value.trim();
+            } else if (currentTab === 'code') {
+                data.language = document.getElementById('language').value.trim();
+                data.dependencies = document.getElementById('dependencies').value.trim();
+                data.tests = document.getElementById('tests').value.trim();
+                data.performance_requirements = document.getElementById('performance_requirements').value.trim();
+                data.style_guide = document.getElementById('style_guide').value.trim();
+                data.error_handling = document.getElementById('error_handling').value.trim();
+            } else if (currentTab === 'analysis') {
+                data.data_format = document.getElementById('data_format').value.trim();
+                data.metrics = document.getElementById('metrics').value.trim();
+                data.formulas = document.getElementById('formulas').value.trim();
+                data.visualization_requirements = document.getElementById('visualization_requirements').value.trim();
+                data.comparison_criteria = document.getElementById('comparison_criteria').value.trim();
+                data.confidence_levels = document.getElementById('confidence_levels').value.trim();
+            }
+            
+            return data;
+        }
+        
+        function generatePreview(data) {
+            const description = data.description || data.title;
+            const subfolder = data.subfolder ? `  <subfolder>${data.subfolder}</subfolder>\n` : '';
+            
+            let preview = `<metadata>
+  <title>${data.title}</title>
+  <description>${description}</description>
+  <category>${data.category}</category>
+${subfolder}  <tags>${data.tags}</tags>
+  <created>[timestamp will be added on save]</created>
+  <brand>pixeloni.ai</brand>
+  <citation_format>${data.citation_format}</citation_format>
+</metadata>
+
+<role>
+${data.role}
+</role>
+
+<task>
+${data.task}
+</task>
+
+<context>
+${data.context}
+</context>
+`;
+            
+            if (data.source_paths) {
+                preview += `\n<source_paths>\n${data.source_paths}\n\nNOTE: Use Desktop Commander tools (desktop-commander:read_file, desktop-commander:read_multiple_files) to access these file paths. If Claude cannot access these paths, STOP and request help accessing the file paths.\n</source_paths>\n`;
+            }
+            
+            if (currentTab === 'research') {
+                if (data.sources) preview += `\n<sources>\n${data.sources}\n</sources>\n`;
+                if (data.methodology) preview += `\n<methodology>\n${data.methodology}\n</methodology>\n`;
+            } else if (currentTab === 'code') {
+                if (data.language) {
+                    preview = preview.replace('<task>', `<language>\n${data.language}\n</language>\n\n<task>`);
+                }
+                if (data.dependencies) preview += `\n<dependencies>\n${data.dependencies}\n</dependencies>\n`;
+            } else if (currentTab === 'analysis') {
+                if (data.data_format) preview += `\n<data_format>\n${data.data_format}\n</data_format>\n`;
+                if (data.metrics) preview += `\n<metrics>\n${data.metrics}\n</metrics>\n`;
+                if (data.formulas) preview += `\n<formulas>\n${data.formulas}\n</formulas>\n`;
+                if (data.visualization_requirements) preview += `\n<visualization_requirements>\n${data.visualization_requirements}\n</visualization_requirements>\n`;
+            }
+            
+            preview += `\n<examples>\n${data.examples}\n</examples>\n`;
+            
+            if (currentTab === 'research' && data.literature_review) {
+                preview += `\n<literature_review>\n${data.literature_review}\n</literature_review>\n`;
+            } else if (currentTab === 'code') {
+                if (data.tests) preview += `\n<tests>\n${data.tests}\n</tests>\n`;
+                if (data.performance_requirements) preview += `\n<performance_requirements>\n${data.performance_requirements}\n</performance_requirements>\n`;
+            } else if (currentTab === 'analysis' && data.comparison_criteria) {
+                preview += `\n<comparison_criteria>\n${data.comparison_criteria}\n</comparison_criteria>\n`;
+            }
+            
+            preview += `\n<output_format>\n${data.output_format}\n</output_format>\n`;
+            
+            if (data.output_path) {
+                preview += `\n<output_path>\n${data.output_path}\n\nNOTE: Save the final output to this absolute path using Desktop Commander tools.\n</output_path>\n`;
+            }
+            
+            preview += `\n<constraints>\n${data.constraints}\n</constraints>\n`;
+            
+            if (currentTab === 'research' && data.quality_criteria) {
+                preview += `\n<quality_criteria>\n${data.quality_criteria}\n</quality_criteria>\n`;
+            } else if (currentTab === 'code') {
+                if (data.style_guide) preview += `\n<style_guide>\n${data.style_guide}\n</style_guide>\n`;
+                if (data.error_handling) preview += `\n<error_handling>\n${data.error_handling}\n</error_handling>\n`;
+            } else if (currentTab === 'analysis' && data.confidence_levels) {
+                preview += `\n<confidence_levels>\n${data.confidence_levels}\n</confidence_levels>\n`;
+            }
+            
+            preview += `\n<thinking>\n${data.thinking}\n</thinking>\n`;
+            
+            return preview;
+        }
+        
+        previewBtn.addEventListener('click', () => {
+            if (!validateForm()) return;
+            
+            const data = getFormData();
+            const preview = generatePreview(data);
+            document.getElementById('previewContent').textContent = preview;
+            previewModal.classList.add('active');
+        });
+        
+        closePreview.addEventListener('click', () => {
+            previewModal.classList.remove('active');
+        });
+        
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.classList.remove('active');
+            }
+        });
+        
+        saveBtn.addEventListener('click', async () => {
+            if (!validateForm()) return;
+            
+            const data = getFormData();
+            
+            try {
+                const response = await fetch('/api/save-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showSuccess(`Prompt saved successfully: ${result.filename}`);
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showError(result.error || 'Failed to save prompt');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        });
+        
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Clear entire form? This cannot be undone.')) {
+                form.reset();
+                document.querySelectorAll('textarea').forEach(textarea => textarea.value = '');
+                hideMessages();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -3,172 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelOni.ai - Prompt Library</title>
+    <title>PixelOni.ai Prompt Library</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --dark-navy: #1a3a52; --navy: #2a4a62; --cream: #f5e6d3;
-            --teal: #7dd3c0; --coral: #ffa07a; --text-dark: #1a3a52;
+            --navy-dark: #1a3a52;
+            --navy-light: #2a4a62;
+            --teal: #7dd3c0;
+            --coral: #ffa07a;
+            --cream: #f5e6d3;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.6; }
-        .header { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--navy) 100%); padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .header-content { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; }
-        .logo-container { flex-shrink: 0; }
-        .logo { width: 120px; height: 120px; border-radius: 50%; background: var(--cream); padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .header-text h1 { color: var(--cream); font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .header-text p { color: var(--teal); font-size: 1.1rem; }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
-        .search-bar { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; border: 2px solid var(--teal); }
-        .search-bar input { width: 100%; padding: 1rem; font-size: 1rem; border: 2px solid var(--navy); border-radius: 8px; outline: none; transition: all 0.3s; }
-        .search-bar input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(125, 211, 192, 0.2); }
-        .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .category-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-left: 4px solid var(--teal); transition: all 0.3s; }
-        .category-card h3 { color: var(--dark-navy); font-size: 1.4rem; margin-bottom: 0.5rem; }
-        .category-card .count { color: var(--teal); font-weight: bold; font-size: 1.1rem; }
-        .category-subfolders { margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid #e0e0e0; font-size: 0.85rem; color: #666; }
-        .subfolder-item { display: inline-block; margin-right: 1rem; margin-top: 0.3rem; }
-        .prompts-section { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .prompt-item { border-bottom: 1px solid #e0e0e0; padding: 1.5rem 0; transition: all 0.2s; cursor: pointer; }
-        .prompt-item:last-child { border-bottom: none; }
-        .prompt-item:hover { background: rgba(125, 211, 192, 0.05); padding-left: 1rem; margin-left: -1rem; border-radius: 8px; }
-        .prompt-title { color: var(--dark-navy); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .prompt-meta { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.9rem; color: #666; }
-        .tag { background: var(--teal); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; }
-        .subfolder-badge { display: inline-block; background: var(--coral); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; margin-left: 0.5rem; }
-        .stats { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .stat-card { flex: 1; min-width: 200px; background: linear-gradient(135deg, var(--teal) 0%, var(--coral) 100%); color: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .stat-card h4 { font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem; }
-        .stat-card .number { font-size: 2.5rem; font-weight: bold; }
-        .footer { text-align: center; padding: 2rem; color: var(--navy); margin-top: 4rem; }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-light) 100%);
+            color: var(--cream);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-container {
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .header-text {
+            flex-grow: 1;
+        }
+        
+        .header-text h1 {
+            color: var(--teal);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            color: var(--cream);
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .create-btn {
+            background: var(--teal);
+            color: var(--navy-dark);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .create-btn:hover {
+            background: var(--coral);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 160, 122, 0.3);
+        }
+        
+        .search-filter-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(125, 211, 192, 0.3);
+            border-radius: 8px;
+            color: var(--cream);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--teal);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            color: var(--teal);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            background: var(--navy-dark);
+            border: 1px solid rgba(125, 211, 192, 0.3);
+            border-radius: 8px;
+            color: var(--cream);
+            font-size: 14px;
+        }
+        
+        .filter-group select option {
+            background: var(--navy-dark);
+            color: var(--cream);
+        }
+        
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--teal);
+        }
+        
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .prompt-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(125, 211, 192, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .prompt-card:hover {
+            border-color: var(--teal);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(125, 211, 192, 0.2);
+        }
+        
+        .prompt-card h3 {
+            color: var(--teal);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .prompt-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-category {
+            background: rgba(125, 211, 192, 0.2);
+            color: var(--teal);
+        }
+        
+        .badge-subfolder {
+            background: rgba(255, 160, 122, 0.2);
+            color: var(--coral);
+        }
+        
+        .badge-date {
+            background: rgba(245, 230, 211, 0.1);
+            color: var(--cream);
+            opacity: 0.7;
+        }
+        
+        .tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--cream);
+            opacity: 0.8;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--cream);
+            opacity: 0.6;
+            font-size: 18px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--teal);
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="logo-container">
-                <img src="/logo.png" alt="PixelOni.ai Logo" class="logo">
-            </div>
-            <div class="header-text">
-                <h1>PixelOni.ai Prompt Library</h1>
-                <p>Your organized collection of AI prompts and workflows</p>
-            </div>
-        </div>
-    </div>
     <div class="container">
-        <div class="stats">
-            <div class="stat-card"><h4>Total Prompts</h4><div class="number" id="totalPrompts">0</div></div>
-            <div class="stat-card"><h4>Categories</h4><div class="number" id="totalCategories">0</div></div>
-            <div class="stat-card"><h4>Last Updated</h4><div class="number" style="font-size: 1.2rem;" id="lastUpdated">Today</div></div>
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="logo.png" alt="PixelOni.ai Logo" class="logo">
+                </div>
+                <div class="header-text">
+                    <h1>PixelOni.ai Prompt Library</h1>
+                    <p>Your organized collection of AI prompts and workflows</p>
+                </div>
+                <a href="/builder" class="create-btn">+ Create New Prompt</a>
+            </div>
         </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search prompts by title, tags, or content..." />
+        
+        <div class="search-filter-section">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search prompts by title, tags, or description...">
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Subfolder</label>
+                    <select id="subfolderFilter">
+                        <option value="">All Subfolders</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Sort By</label>
+                    <select id="sortFilter">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="title-asc">Title (A-Z)</option>
+                        <option value="title-desc">Title (Z-A)</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="categories" id="categoriesGrid"></div>
-        <div class="prompts-section">
-            <h2 style="color: var(--dark-navy); margin-bottom: 1.5rem;">
-                All Prompts <button onclick="resetFilter()" style="margin-left: 1rem; padding: 0.5rem 1rem; background: var(--teal); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">Show All</button>
-            </h2>
-            <div id="promptsList"><div class="prompt-item"><div class="prompt-title">Loading...</div></div></div>
+        
+        <div id="promptsContainer">
+            <div class="loading">Loading prompts...</div>
         </div>
     </div>
-    <div class="footer"><p>PixelOni.ai Prompt Library | satanzhand since 1980s</p></div>
+    
     <script>
         let allPrompts = [];
-        const categoryIcons = { coding: '🔧', writing: '✍️', analysis: '📊', automation: '⚙️', clients: '👥' };
-        const categoryDescriptions = { 
-            coding: 'Development and programming prompts', writing: 'Content creation and documentation',
-            analysis: 'Data processing and insights', automation: 'Scripts and workflow automation',
-            clients: 'Client-specific prompts and workflows'
-        };
-        
-        async function loadCategories() {
-            try {
-                const response = await fetch('/api/categories');
-                const categories = await response.json();
-                const grid = document.getElementById('categoriesGrid');
-                grid.innerHTML = Object.entries(categories).map(([name, data]) => {
-                    const icon = categoryIcons[name] || '📁';
-                    const desc = categoryDescriptions[name] || 'Prompts and workflows';
-                    let subfoldersHTML = '';
-                    if (Object.keys(data.subfolders).length > 0) {
-                        subfoldersHTML = '<div class="category-subfolders">' +
-                            Object.entries(data.subfolders).map(([sub, count]) => 
-                                `<span class="subfolder-item" onclick="filterBySubfolder('${name}', '${sub}'); event.stopPropagation();">📂 ${sub}: ${count}</span>`
-                            ).join('') + '</div>';
-                    }
-                    return `<div class="category-card" onclick="filterByCategory('${name}')">
-                        <h3>${icon} ${name.charAt(0).toUpperCase() + name.slice(1)}</h3>
-                        <p>${desc}</p><div class="count">${data.total} prompts</div>${subfoldersHTML}</div>`;
-                }).join('');
-                document.getElementById('totalCategories').textContent = Object.keys(categories).length;
-            } catch (error) { console.error('Error loading categories:', error); }
-        }
         
         async function loadPrompts() {
             try {
                 const response = await fetch('/api/prompts');
                 allPrompts = await response.json();
-                document.getElementById('totalPrompts').textContent = allPrompts.length;
-                renderPrompts(allPrompts);
+                
+                populateFilters();
+                renderPrompts();
             } catch (error) {
-                console.error('Error loading prompts:', error);
-                document.getElementById('promptsList').innerHTML = 
-                    '<div class="prompt-item"><div class="prompt-title">Error loading prompts. Make sure Flask server is running.</div></div>';
+                document.getElementById('promptsContainer').innerHTML = `
+                    <div class="no-results">Failed to load prompts: ${error.message}</div>
+                `;
             }
         }
         
-        function renderPrompts(prompts) {
-            const list = document.getElementById('promptsList');
-            if (prompts.length === 0) {
-                list.innerHTML = '<div class="prompt-item"><div class="prompt-title">No prompts found</div></div>';
+        function populateFilters() {
+            const categories = [...new Set(allPrompts.map(p => p.category))].sort();
+            const subfolders = [...new Set(allPrompts.map(p => p.subfolder).filter(Boolean))].sort();
+            
+            const categoryFilter = document.getElementById('categoryFilter');
+            const subfolderFilter = document.getElementById('subfolderFilter');
+            
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                categoryFilter.appendChild(option);
+            });
+            
+            subfolders.forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub;
+                option.textContent = sub.charAt(0).toUpperCase() + sub.slice(1);
+                subfolderFilter.appendChild(option);
+            });
+        }
+        
+        function filterAndSortPrompts() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const subfolder = document.getElementById('subfolderFilter').value;
+            const sort = document.getElementById('sortFilter').value;
+            
+            let filtered = allPrompts.filter(prompt => {
+                const matchesSearch = !searchTerm || 
+                    prompt.title.toLowerCase().includes(searchTerm) ||
+                    prompt.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                
+                const matchesCategory = !category || prompt.category === category;
+                const matchesSubfolder = !subfolder || prompt.subfolder === subfolder;
+                
+                return matchesSearch && matchesCategory && matchesSubfolder;
+            });
+            
+            filtered.sort((a, b) => {
+                switch(sort) {
+                    case 'date-desc':
+                        return b.date.localeCompare(a.date);
+                    case 'date-asc':
+                        return a.date.localeCompare(b.date);
+                    case 'title-asc':
+                        return a.title.localeCompare(b.title);
+                    case 'title-desc':
+                        return b.title.localeCompare(a.title);
+                    default:
+                        return 0;
+                }
+            });
+            
+            return filtered;
+        }
+        
+        function renderPrompts() {
+            const container = document.getElementById('promptsContainer');
+            const filtered = filterAndSortPrompts();
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-results">No prompts found matching your criteria</div>';
                 return;
             }
-            list.innerHTML = prompts.map(p => {
-                const subfolderBadge = p.subfolder ? `<span class="subfolder-badge">${p.subfolder}</span>` : '';
-                return `<div class="prompt-item" onclick="openPrompt('${p.path}')">
-                    <div class="prompt-title">${p.title}${subfolderBadge}</div>
-                    <div class="prompt-meta"><span>📁 ${p.category}</span><span>📅 ${p.date}</span>
-                    ${p.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div></div>`;
-            }).join('');
+            
+            const grid = document.createElement('div');
+            grid.className = 'prompts-grid';
+            
+            filtered.forEach(prompt => {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                card.onclick = () => window.open(prompt.path, '_blank');
+                
+                const tagsHTML = prompt.tags.length > 0 
+                    ? `<div class="tags">${prompt.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
+                    : '';
+                
+                const subfolderBadge = prompt.subfolder 
+                    ? `<span class="badge badge-subfolder">${prompt.subfolder}</span>`
+                    : '';
+                
+                card.innerHTML = `
+                    <h3>${prompt.title}</h3>
+                    <div class="prompt-meta">
+                        <span class="badge badge-category">${prompt.category}</span>
+                        ${subfolderBadge}
+                        <span class="badge badge-date">${prompt.date}</span>
+                    </div>
+                    ${tagsHTML}
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(grid);
         }
         
-        function openPrompt(path) { window.open(path, '_blank'); }
+        document.getElementById('searchBox').addEventListener('input', renderPrompts);
+        document.getElementById('categoryFilter').addEventListener('change', renderPrompts);
+        document.getElementById('subfolderFilter').addEventListener('change', renderPrompts);
+        document.getElementById('sortFilter').addEventListener('change', renderPrompts);
         
-        function filterByCategory(category) {
-            const filtered = allPrompts.filter(p => p.category === category);
-            renderPrompts(filtered);
-            document.querySelector('.prompts-section h2').textContent = 
-                `${category.charAt(0).toUpperCase() + category.slice(1)} Prompts (${filtered.length})`;
-        }
-        
-        function filterBySubfolder(category, subfolder) {
-            const filtered = allPrompts.filter(p => p.category === category && p.subfolder === subfolder);
-            renderPrompts(filtered);
-            document.querySelector('.prompts-section h2').textContent = 
-                `${category.charAt(0).toUpperCase() + category.slice(1)} > ${subfolder} (${filtered.length})`;
-        }
-        
-        function resetFilter() {
-            renderPrompts(allPrompts);
-            document.querySelector('.prompts-section h2').textContent = 'All Prompts';
-        }
-        
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            const term = e.target.value.toLowerCase().trim();
-            if (term === '') { renderPrompts(allPrompts); return; }
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`);
-                    const results = await response.json();
-                    renderPrompts(results);
-                } catch (error) { console.error('Search error:', error); }
-            }, 300);
-        });
-        
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
-        window.addEventListener('load', () => { loadCategories(); loadPrompts(); });
+        loadPrompts();
     </script>
 </body>
 </html>
